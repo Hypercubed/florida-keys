@@ -3,6 +3,8 @@ CHANGELOG
 
 ## HEAD (Unreleased)
 * Feature: support chained sorting
+* Bug: fix lte condition getter
+* Bug: add missing gt condition getter
 
 --------------------
 

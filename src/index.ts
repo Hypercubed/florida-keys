@@ -57,6 +57,11 @@ export class FK<T = any, U = T> {
     return new FK<T, boolean>($);
   }
 
+  gt(value: any) {
+    const $ = (t: T) => this.$(t) > value;
+    return new FK<T, boolean>($);
+  }
+
   gte(value: any) {
     const $ = (t: T) => this.$(t) >= value;
     return new FK<T, boolean>($);
@@ -68,18 +73,13 @@ export class FK<T = any, U = T> {
   }
 
   lte(value: any) {
-    const $ = (t: T) => this.$(t) < value;
+    const $ = (t: T) => this.$(t) <= value;
     return new FK<T, boolean>($);
   }
 
   identical(a: any) {
     const $ = (t: T) => {
-      const b = this.$(t);
-      if (a === b) {
-        return a !== 0 || 1 / +a === 1 / +b;
-      } else {
-        return a !== a && b !== b;
-      }
+      return Object.is(a, this.$(t));
     };
     return new FK<T, boolean>($);
   }
