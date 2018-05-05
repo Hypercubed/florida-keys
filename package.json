@@ -70,6 +70,7 @@
     "cz-conventional-changelog": "^2.1.0",
     "dtslint": "^0.3.0",
     "gh-pages": "^1.0.0",
+    "np": "^2.20.1",
     "npm-run-all": "^4.1.2",
     "npm-scripts-info": "^0.3.6",
     "nsp": "^3.2.1",
