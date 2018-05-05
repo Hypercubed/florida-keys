@@ -7,6 +7,8 @@ tslint.json
 .github
 .prettierignore
 build/docs
+build/main/tests
+build/module/tests
 **/*.spec.*
 coverage
 .nyc_output

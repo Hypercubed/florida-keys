@@ -1,3 +1,7 @@
+export function assertType<T>(_: T): T {
+  return _;
+}
+
 export interface Account {
   id?: number;
   type: string;

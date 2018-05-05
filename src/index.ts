@@ -11,10 +11,6 @@ export type CompareFn<T> = (a: T, b: T) => number;
 export class FK<T = any, U = T> {
   constructor(public $: Getter<T, U>) {}
 
-  then<V = any>(callbackFn: Getter<U, V>) {
-    return (t: T) => callbackFn(this.$(t));
-  }
-
   satisfies(callbackFn: Getter<U, boolean>) {
     const $ = this.then<boolean>(callbackFn);
     return new FK<T, boolean>($);
@@ -103,10 +99,24 @@ export class FK<T = any, U = T> {
   desc(): FS<T> {
     return this.order((a: U, b: U) => a > b ? -1 : a < b ? 1 : 0);
   }
+
+  private then<V = any>(callbackFn: Getter<U, V>) {
+    return (t: T) => callbackFn(this.$(t));
+  }
 }
 
 export class FS<T = any> {
   constructor(public $: CompareFn<T>) {}
+
+  then(fs: FS<T>): FS<T> {
+    const $ = (ta: T, tb: T): number => {
+      const r = this.$(ta, tb);
+      return (r === 0) ?
+        fs.$(ta, tb) :
+        r;
+    }
+    return new FS<T>($);
+  }
 }
 
 export function florida<T = any>() {

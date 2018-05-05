@@ -1,5 +1,6 @@
 import { test } from 'ava';
 import { and, florida } from '../index';
+import { assertType } from './fixtures';
 
 interface Person {
   first: string;
@@ -40,6 +41,46 @@ const people: Person[] = [
 	}
 ];
 
+
+test('runs', t => {
+
+
+  const fPeople = florida<Person>();
+  const first = fPeople.k('first');
+  const dob = fPeople.k('dob');
+
+  const gNames = first.i(0).eq('G');
+  const nineties = and(dob.gte(new Date('1/1/1990')), dob.lt(new Date('1/1/2000')));
+
+  const fullname = fPeople.g(d => [d.last, d.first].join(', '));
+
+  const dobSort = dob.asc();
+
+  t.deepEqual(people.map(first.$), [
+    'Graham',
+    'Gil',
+    'Curran',
+    'Hop',
+    'Owen',
+    'Garth'
+  ]);
+
+  const p = people
+    .filter(and(gNames, nineties).$)
+    .sort(dobSort.$)
+    .map(fullname.$);
+
+  // $ExpectType string[]
+  assertType<string[]>(p);
+
+  t.deepEqual(people.filter(gNames.$).length, 3);
+  t.deepEqual(people.filter(nineties.$).length, 4);
+  t.deepEqual(
+    p,
+    ['Nguyen, Garth', 'Wiggins, Gil']
+  );
+});
+
 test('without fk', t => {
   const first = (d: Person) => d.first;
   const nineties = (d: Person) => d.dob >= new Date('1/1/1990') && d.dob < new Date('1/1/2000');
@@ -68,36 +109,3 @@ test('without fk', t => {
   );
 });
 
-test('runs', t => {
-  const fPeople = florida<Person>();
-  const first = fPeople.k('first');
-  const dob = fPeople.k('dob');
-
-  const gNames = first.i(0).eq('G');
-  const nineties = and(dob.gte(new Date('1/1/1990')), dob.lt(new Date('1/1/2000')));
-  const fullname = fPeople.g(d => `${d.last}, ${d.first}`);
-
-  const dobSort = dob.asc();
-
-  t.deepEqual(people.map(first.$), [
-    'Graham',
-    'Gil',
-    'Curran',
-    'Hop',
-    'Owen',
-    "Garth"
-  ]);
-
-  
-  const p = people
-    .filter(and(gNames, nineties).$)
-    .sort(dobSort.$)
-    .map(fullname.$);
-
-  t.deepEqual(people.filter(gNames.$).length, 3);
-  t.deepEqual(people.filter(nineties.$).length, 4);
-  t.deepEqual(
-    p,
-    ['Nguyen, Garth', 'Wiggins, Gil']
-  );
-});

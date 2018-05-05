@@ -1,10 +1,6 @@
 import { test } from 'ava';
 import { florida } from '../index';
-import { azusa, Person } from './fixtures';
-
-function assertType<T>(_: T): T {
-  return _;
-}
+import { assertType, azusa, Person } from './fixtures';
 
 const fkPerson = florida<Person>();
 
@@ -14,6 +10,7 @@ test('identical', t => {
 
   // $ExpectType boolean
   assertType<boolean>(r);
+
   t.true(r);
 });
 
@@ -23,6 +20,7 @@ test('equal', t => {
 
   // $ExpectType boolean
   assertType<boolean>(r);
+
   t.true(r);
 });
 
@@ -32,6 +30,7 @@ test('is', t => {
 
   // $ExpectType boolean
   assertType<boolean>(r);
+
   t.true(r);
 });
 
@@ -43,5 +42,6 @@ test('satisfies', t => {
 
   // $ExpectType boolean
   assertType<boolean>(r);
+
   t.true(r);
 });

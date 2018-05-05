@@ -1,9 +1,7 @@
 import { test } from 'ava';
-import { florida } from '../index';
+import { assertType } from './fixtures';
 
-function assertType<T>(_: T): T {
-  return _;
-}
+import { florida } from '../index';
 
 interface Person {
   firstname: string;
@@ -12,9 +10,9 @@ interface Person {
 }
 
 const people: Person[] = [
-  { firstname: 'John', lastname: 'Smith', age: 51 },
+  { firstname: 'Adam', lastname: 'Smith', age: 51 },
   { firstname: 'John', lastname: 'Hawley', age: 16 },
-  { firstname: 'Janet', lastname: 'Howell', age: 23 },
+  { firstname: 'Janet', lastname: 'Smith', age: 23 },
   { firstname: 'John', lastname: 'Jones', age: 29 },
   { firstname: 'John', lastname: 'Hernandez', age: 22 },
   { firstname: 'Maurice', lastname: 'Hall', age: 22 }
@@ -29,6 +27,7 @@ test('return ascending order', t => {
 
   // $ExpectType Person[]
   assertType<Person[]>(r);
+
   t.deepEqual(r.map(age.$), [51, 29, 23, 22, 22, 16]);
 });
 
@@ -39,6 +38,7 @@ test('return decending order', t => {
 
   // $ExpectType Person[]
   assertType<Person[]>(r);
+
   t.deepEqual(r.map(age.$), [16, 22, 22, 23, 29, 51]);
 });
 
@@ -51,12 +51,34 @@ test('return custom order', t => {
 
   // $ExpectType Person[]
   assertType<Person[]>(r);
+
   t.deepEqual(r.map(lastname.$), [
     'Hernandez',
     'Hawley',
-    'Howell',
+    'Smith',
     'Jones',
     'Smith',
     'Hall'
+  ]);
+});
+
+test('composed order', t => {
+  const lastname = fkPerson.k('lastname').asc();
+  const firstname = fkPerson.k('firstname').asc();
+  const order = lastname.then(firstname);
+  
+  const r = people
+    .sort(order.$);
+
+  // $ExpectType Person[]
+  assertType<Person[]>(r);
+  
+  t.deepEqual(r.map(d => `${d.lastname}, ${d.firstname}`), [
+    'Hall, Maurice',
+    'Hawley, John',
+    'Hernandez, John',
+    'Jones, John',
+    'Smith, Adam',
+    'Smith, Janet'
   ]);
 });

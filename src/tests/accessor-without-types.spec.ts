@@ -1,10 +1,6 @@
 import { test } from 'ava';
 import { florida } from '../index';
-import { azusa } from './fixtures';
-
-function assertType<T>(_: T): T {
-  return _;
-}
+import { assertType, azusa } from './fixtures';
 
 const fkPerson = florida();
 
@@ -21,7 +17,8 @@ test('return by key', t => {
   const r = name.$(azusa);
 
   // $ExpectType any
-  assertType(r);
+  assertType<any>(r);
+
   t.deepEqual(r, 'Nakano Azusa');
 });
 
@@ -30,7 +27,8 @@ test('return by key nested', t => {
   const r = primaryId.$(azusa);
 
   // $ExpectType any
-  assertType(r);
+  assertType<any>(r);
+
   t.deepEqual(r, 10);
 });
 
@@ -39,7 +37,8 @@ test('return by index', t => {
   const r = firstAccount.$(azusa);
 
   // $ExpectType any
-  assertType(r);
+  assertType<any>(r);
+
   t.deepEqual(r.type, 'twitter');
 });
 
@@ -48,7 +47,8 @@ test('return by compose', t => {
   const r = age.$(azusa);
 
   // $ExpectType any
-  assertType(r);
+  assertType<any>(r);
+
   t.deepEqual(r, 15);
 });
 
@@ -57,7 +57,8 @@ test('return by compose nested', t => {
   const r = primaryId.$(azusa);
 
   // $ExpectType any
-  assertType(r);
+  assertType<any>(r);
+
   t.deepEqual(r, 10);
 });
 
@@ -66,6 +67,7 @@ test('return by path', t => {
   const r = primaryId.$(azusa);
 
   // $ExpectType any
-  assertType(r);
+  assertType<any>(r);
+  
   t.deepEqual(r, 10);
 });
